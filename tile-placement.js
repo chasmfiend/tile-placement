@@ -71,8 +71,8 @@ function placeTiles(gridSize, largeCount, mediumCount) {
 
 // Example usage
 const gridSize = 40;
-const largeCount = 3;
-const mediumCount = 6;
+const largeCount = 5;
+const mediumCount = 15;
 
 const grid = placeTiles(gridSize, largeCount, mediumCount);
 
