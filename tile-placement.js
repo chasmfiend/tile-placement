@@ -19,7 +19,7 @@ class Tile {
 }
 
 function isValidPlacement(grid, tile, row, col) {
-  
+  // Given the starting row and column, check if the tile can be placed
   for (let i = row; i < row + tile.size; i++) {
     for (let j = col; j < col + tile.size; j++) {
       if (i >= grid.length || j >= grid[0].length || grid[i][j].name !== "S") {
@@ -40,14 +40,14 @@ function printGrid(grid) {
 function placeTiles(gridSize, largeCount, mediumCount) {
   const grid = Array(gridSize)
     .fill()
-    .map((i) => Array(gridSize).fill(new Tile("S",-1,-1)));
+    .map((i) => Array(gridSize).fill(new Tile("S", -1, -1)));
   const tileSizes = [
-    {name: "L", size: 10},
-   {name:"M", size: 5},
-    {name:"S", size: 1}
+    { name: "L", size: 10 },
+    { name: "M", size: 5 },
+    { name: "S", size: 1 }
   ];
   const tileCounts = [largeCount, mediumCount];
-//Place the large and medium tiles
+  //Place the large and medium tiles
   for (let i = 0; i < tileSizes.length; i++) {
     const [name, count] = [tileSizes[i].name, tileCounts[i]];
     for (let j = 0; j < count; j++) {
