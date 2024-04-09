@@ -1,12 +1,13 @@
 class Tile {
   constructor(name, row, col) {
+    //random id to identify each tile
     this.id = Math.random().toString(36).substr(2, 9);
     this.name = name;
     switch (name) {
-      case "L":
+      case 'L':
         this.size = 10;
         break;
-      case "M":
+      case 'M':
         this.size = 5;
         break;
       default:
@@ -19,16 +20,18 @@ class Tile {
 }
 
 function isValidPlacement(grid, tile, row, col) {
-  // Given the starting row and column, check if the tile can be placed
+  // Given the starting row and column, check if the tile of that can be placed
+  // (i.e. all cells are empty and within the grid bounds)
   for (let i = row; i < row + tile.size; i++) {
     for (let j = col; j < col + tile.size; j++) {
-      if (i >= grid.length || j >= grid[0].length || grid[i][j].name !== "S") {
+      if (i >= grid.length || j >= grid[0].length || grid[i][j].name !== 'S') {
         return false;
       }
     }
   }
   return true;
 }
+// helper function to print out the grid
 function printGrid(grid) {
   console.log("Grid:\n");
   for (let i = 0; i < grid.length; i++) {
@@ -38,16 +41,17 @@ function printGrid(grid) {
 }
 
 function placeTiles(gridSize, largeCount, mediumCount) {
+  // set up empty grid, start with Small tiles everywhere
   const grid = Array(gridSize)
     .fill()
-    .map((i) => Array(gridSize).fill(new Tile("S", -1, -1)));
+    .map((i) => Array(gridSize).fill(new Tile('S', -1, -1)));
   const tileSizes = [
-    { name: "L", size: 10 },
-    { name: "M", size: 5 },
-    { name: "S", size: 1 }
+    { name: 'L', size: 10 },
+    { name: 'M', size: 5 },
+    { name: 'S', size: 1 },
   ];
   const tileCounts = [largeCount, mediumCount];
-  //Place the large and medium tiles
+  //Place the large and medium tiles, whatever is left will be small tiles
   for (let i = 0; i < tileSizes.length; i++) {
     const [name, count] = [tileSizes[i].name, tileCounts[i]];
     for (let j = 0; j < count; j++) {
@@ -56,6 +60,7 @@ function placeTiles(gridSize, largeCount, mediumCount) {
         const col = Math.floor(Math.random() * (gridSize - tileSizes[i].size));
         const tile = new Tile(name, row, col);
         if (isValidPlacement(grid, tile, row, col)) {
+          //fill in all the cells that the tile covers
           for (let k = row; k < row + tileSizes[i].size; k++) {
             for (let l = col; l < col + tileSizes[i].size; l++) {
               grid[k][l] = tile;
