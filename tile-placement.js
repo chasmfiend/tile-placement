@@ -1,43 +1,63 @@
 class Tile {
-  constructor(size, row, col) {
-    this.size = size;
+  constructor(name, row, col) {
+    this.id = Math.random().toString(36).substr(2, 9);
+    this.name = name;
+    switch (name) {
+      case "L":
+        this.size = 10;
+        break;
+      case "M":
+        this.size = 5;
+        break;
+      default:
+        this.size = 1;
+        break;
+    }
     this.row = row;
     this.col = col;
   }
 }
 
 function isValidPlacement(grid, tile, row, col) {
+  
   for (let i = row; i < row + tile.size; i++) {
     for (let j = col; j < col + tile.size; j++) {
-      if (i >= grid.length || j >= grid[0].length || grid[i][j] !== null) {
+      if (i >= grid.length || j >= grid[0].length || grid[i][j].name !== "S") {
         return false;
       }
     }
   }
   return true;
 }
+function printGrid(grid) {
+  console.log("Grid:\n");
+  for (let i = 0; i < grid.length; i++) {
+    console.log(grid[i].map((tile) => (tile ? tile.name : "null")).join(" "));
+  }
+  console.log("-------------------------------------------------------\n")
+}
 
-function placeTiles(gridSize, largeCount, mediumCount, smallCount) {
+function placeTiles(gridSize, largeCount, mediumCount) {
   const grid = Array(gridSize)
     .fill()
-    .map(() => Array(gridSize).fill(null));
+    .map((i) => Array(gridSize).fill(new Tile("S",-1,-1)));
   const tileSizes = [
-    ["Large", 100],
-    ["Medium", 50],
-    ["Small", 10],
+    {name: "L", size: 10},
+   {name:"M", size: 5},
+    {name:"S", size: 1}
   ];
-  const tileCounts = [largeCount, mediumCount, smallCount];
-
+  const tileCounts = [largeCount, mediumCount];
+//Place the large and medium tiles
   for (let i = 0; i < tileSizes.length; i++) {
-    const [size, count] = [tileSizes[i][0], tileCounts[i]];
+    const [name, count] = [tileSizes[i].name, tileCounts[i]];
     for (let j = 0; j < count; j++) {
       while (true) {
-        const row = Math.floor(Math.random() * (gridSize - tileSizes[i][1]));
-        const col = Math.floor(Math.random() * (gridSize - tileSizes[i][1]));
-        const tile = new Tile(size, row, col);
+        const row = Math.floor(Math.random() * (gridSize - tileSizes[i].size));
+        const col = Math.floor(Math.random() * (gridSize - tileSizes[i].size));
+        const tile = new Tile(name, row, col);
         if (isValidPlacement(grid, tile, row, col)) {
-          for (let k = row; k < row + tileSizes[i][1]; k++) {
-            for (let l = col; l < col + tileSizes[i][1]; l++) {
+          for (let k = row; k < row + tileSizes[i].size; k++) {
+            for (let l = col; l < col + tileSizes[i].size; l++) {
               grid[k][l] = tile;
             }
           }
@@ -46,31 +66,14 @@ function placeTiles(gridSize, largeCount, mediumCount, smallCount) {
       }
     }
   }
-
-  for (let row = 0; row < gridSize; row++) {
-    for (let col = 0; col < gridSize; col++) {
-      if (grid[row][col] === null) {
-        grid[row][col] = new Tile("Small", row, col);
-      }
-    }
-  }
-
   return grid;
 }
 
 // Example usage
-const gridSize = 400;
+const gridSize = 40;
 const largeCount = 3;
 const mediumCount = 6;
-const smallCount = Math.pow(gridSize / 10, 2) - largeCount - mediumCount;
 
-const grid = placeTiles(gridSize, largeCount, mediumCount, smallCount);
+const grid = placeTiles(gridSize, largeCount, mediumCount);
 
-// Print the grid
-for (const row of grid) {
-  let rowString = "";
-  for (const tile of row) {
-    rowString += `(${tile.size}, (${tile.row}, ${tile.col})), `;
-  }
-  console.log(rowString);
-}
+printGrid(grid);
